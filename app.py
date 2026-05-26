@@ -65,14 +65,15 @@ if uploaded_file and st.session_state.retriever is None:
             chunk_overlap=50
         )
         chunks = splitter.split_documents(documents)
-
-# Check if PDF has extractable text
-if len(chunks) == 0:
-    st.error("⚠️ This PDF appears to be scanned/image-based and has no extractable text. Please upload a text-based PDF like your resume.")
-    st.stop()
-
-# Step 3: Create embeddings and store in FAISS
-embeddings = OpenAIEmbeddings(api_key=openai_api_key)
+ 
+        # Check if PDF has extractable text
+        if len(chunks) == 0:
+            st.error("⚠️ This PDF appears to be scanned/image-based and has no extractable text. Please upload a text-based PDF like your resume.")
+            st.stop()
+ 
+        # Step 3: Create embeddings and store in FAISS
+        embeddings = OpenAIEmbeddings(api_key=openai_api_key)
+        vectorstore = FAISS.from_documents(chunks, embeddings)
  
         # Step 4: Create retriever
         st.session_state.retriever = vectorstore.as_retriever(
@@ -160,3 +161,4 @@ Answer:""",
  
 else:
     st.info("👈 Upload a PDF from the sidebar to get started!")
+ 
