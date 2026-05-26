@@ -4,7 +4,7 @@ from dotenv import load_dotenv
 from langchain_community.document_loaders import PyMuPDFLoader
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 from langchain_openai import OpenAIEmbeddings, ChatOpenAI
-from langchain_community.vectorstores import Chroma
+from langchain_community.vectorstores import FAISS
 from langchain_core.prompts import PromptTemplate
 from langchain_core.runnables import RunnablePassthrough
 from langchain_core.output_parsers import StrOutputParser
@@ -68,7 +68,7 @@ if uploaded_file and st.session_state.retriever is None:
  
         # Step 3: Create embeddings and store in ChromaDB
         embeddings = OpenAIEmbeddings(api_key=openai_api_key)
-        vectorstore = Chroma.from_documents(chunks, embeddings)
+        vectorstore = FAISS.from_documents(chunks, embeddings)
  
         # Step 4: Create retriever
         st.session_state.retriever = vectorstore.as_retriever(
